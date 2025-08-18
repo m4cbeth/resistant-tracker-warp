@@ -1,9 +1,10 @@
-import React, { useMemo, useState, useCallback, useEffect, useRef } from 'react';
-import { FlatList, View, StyleSheet, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
-import { addWeeks } from 'date-fns';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
+import { FlatList, View, StyleSheet, Text } from 'react-native';
+import { addWeeks, format } from 'date-fns';
 import { WeekRow } from '../components/WeekRow';
 import { getWeekStart, weekDays, dateKey } from '../utils/dates';
 import { getValuesForRange, toggleDay } from '../services/days';
+import { ensureAnonymousSignIn } from '../firebase';
 
 const WINDOW = 30; // number of weeks kept around anchor
 
@@ -13,11 +14,18 @@ export default function EndlessCalendar() {
 
   const [values, setValues] = useState<Record<string, boolean>>({});
 
-  // Load values for visible range
+  // Ensure auth then load values for visible range
   useEffect(() => {
-    const start = data[0];
-    const end = addWeeks(data[data.length - 1], 1);
-    getValuesForRange(start, end).then((set) => setValues((prev) => ({ ...prev, ...set })));
+    let mounted = true;
+    (async () => {
+      await ensureAnonymousSignIn();
+      if (!mounted) return;
+      const start = data[0];
+      const end = addWeeks(data[data.length - 1], 1);
+      const set = await getValuesForRange(start, end);
+      if (mounted) setValues((prev) => ({ ...prev, ...set }));
+    })();
+    return () => { mounted = false; };
   }, [data]);
 
   const onEndReached = useCallback(() => {
@@ -40,24 +48,36 @@ export default function EndlessCalendar() {
     });
   }, []);
 
+  const renderItem = ({ item }: { item: Date }) => {
+    const days = weekDays(item);
+    const hasMonthStart = days.some((d) => d.getDate() === 1);
+    const monthLabel = hasMonthStart ? format(days.find((d) => d.getDate() === 1)!, 'MMM') : undefined;
+    return (
+      <WeekRow days={days} values={values} onToggle={onToggle} monthLabel={monthLabel} />
+    );
+  };
+
   return (
-    <FlatList
-      contentContainerStyle={styles.list}
-      data={data}
-      keyExtractor={(d) => d.toISOString()}
-      renderItem={({ item }) => (
-        <WeekRow days={weekDays(item)} values={values} onToggle={onToggle} />
-      )}
-      onEndReachedThreshold={0.6}
-      onEndReached={onEndReached}
-      ListHeaderComponent={<View onLayout={headerOnLayout} />}
-      initialScrollIndex={WINDOW}
-      getItemLayout={(_, index) => ({ length: 56, offset: index * 56, index })}
-    />
+    <View style={styles.container}>
+      <Text style={styles.title}>Resistance Tracker TM</Text>
+      <FlatList
+        contentContainerStyle={styles.list}
+        data={data}
+        keyExtractor={(d) => d.toISOString()}
+        renderItem={renderItem}
+        onEndReachedThreshold={0.6}
+        onEndReached={onEndReached}
+        ListHeaderComponent={<View onLayout={headerOnLayout} />}
+        initialScrollIndex={WINDOW}
+        getItemLayout={(_, index) => ({ length: 72, offset: index * 72, index })}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#000000', paddingTop: 24 },
+  title: { color: '#ffffff', fontSize: 18, fontWeight: '600', paddingHorizontal: 16, marginBottom: 8 },
   list: { paddingVertical: 8 },
 });
 
