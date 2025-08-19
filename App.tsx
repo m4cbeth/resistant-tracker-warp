@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, SafeAreaView, View, Text, Pressable } from 'react-native';
 import EndlessCalendar from './src/screens/EndlessCalendar';
@@ -48,6 +49,33 @@ export default function App() {
       {route === 'profile' && <Profile goHome={() => setRoute('home')} />}
       {route === 'settings' && <Settings goHome={() => setRoute('home')} />}
       <StatusBar style="light" />
+=======
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, SafeAreaView, View } from 'react-native';
+import EndlessCalendar from './src/screens/EndlessCalendar';
+import Header from './src/components/Header';
+import ProfileScreen from './src/screens/ProfileScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
+
+type Screen = 'home' | 'profile' | 'settings';
+
+export default function App() {
+  const [screen, setScreen] = useState<Screen>('home');
+
+  const handleNavigate = useCallback((to: Screen) => {
+    setScreen(to);
+  }, []);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.inner}>
+        <Header onNavigate={handleNavigate} />
+        {screen === 'home' && <EndlessCalendar />}
+        {screen === 'profile' && <ProfileScreen onHome={() => handleNavigate('home')} />}
+        {screen === 'settings' && <SettingsScreen onHome={() => handleNavigate('home')} />}
+      </View>
+      <StatusBar style="auto" />
+>>>>>>> fix-detached-head
     </SafeAreaView>
   );
 }
@@ -57,6 +85,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
   },
+<<<<<<< HEAD
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -100,5 +129,9 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     backgroundColor: '#fff',
+=======
+  inner: {
+    flex: 1,
+>>>>>>> fix-detached-head
   },
 });
