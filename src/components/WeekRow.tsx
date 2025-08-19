@@ -112,8 +112,8 @@ const styles = StyleSheet.create({
     transform: [{ translateX: -14 }, { translateY: -14 }],
     fontSize: 28,
     fontWeight: '900',
-    color: '#9ca3af', // gray-400
-    opacity: 0.18,
+    color: '#afb2c7', // gray-400
+    opacity: 0.5,
   },
   // Foreground marks
   markTrue: { fontSize: 22, color: '#22c55e' }, // text-green-500

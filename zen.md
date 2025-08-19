@@ -1,5 +1,24 @@
 # Things to ask
 
+
+- move into day view when click day:
+    day view "RESISTANCE" up top.
+    start timer: running
+    end timer:
+    "did you say on task the whole time?":
+        bar with slider, slider assumes you did so is at 100% saying 27 mintues or whatever
+        but user can slide it back to any time, including zero,
+        add time to "acting the beat" metric. default 0. display below resistance.
+    "did you beat it?"
+    if no:
+        "that's ok, plently light before bed"
+    if yes:
+        "RESISTANCE" destroys and record is made for that day.
+
+
+
+
+# completed / asked
 some modifications:
 date number inside checkboxes: behind the check/x, font-black and size jumbo almost filling the box, faint gray.
 

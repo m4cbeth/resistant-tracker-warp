@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore, initializeFirestore } from 'firebase/firestore';
-import { getAuth, onAuthStateChanged, signInAnonymously, initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signInAnonymously, signOut as fbSignOut, initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebaseConfig = (Constants.expoConfig as any)?.extra?.firebase
@@ -39,5 +39,9 @@ export async function ensureAnonymousSignIn(): Promise<void> {
       }
     });
   });
+}
+
+export async function signOut(): Promise<void> {
+  await fbSignOut(auth);
 }
 
