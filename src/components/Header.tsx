@@ -18,7 +18,7 @@ export default function Header({ onNavigate }: Props) {
     <View style={[styles.container, { paddingTop: base, height: base + headerHeight }] }>
       <StatusBar style="light" />
       <View style={styles.inner}>
-        <Text style={styles.title}>Resistance Tracker™</Text>
+        <Text style={styles.title}>Resistance™ Tracker</Text>
         <View style={styles.right}>
           <Pressable onPress={() => setOpen((v) => !v)} accessibilityLabel="Open user menu">
             <View style={styles.avatar} />
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 28,
     fontWeight: '600',
   },
   right: {

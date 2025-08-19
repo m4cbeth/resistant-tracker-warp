@@ -97,8 +97,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   // Base backgrounds
-  bgWeekday: { backgroundColor: '#0b0b0b' },
-  bgWeekend: { backgroundColor: '#161616' },
+  bgWeekday: { backgroundColor: '#2e2e2e' },
+  bgWeekend: { backgroundColor: '#1f1f1f' },
   // State-specific backgrounds
   bgTrue: { backgroundColor: '#052e16' }, // tailwind green-950
   bgFalse: { backgroundColor: '#000000' },
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '900',
     color: '#9ca3af', // gray-400
-    opacity: 0.18,
+    opacity: 0.85,
   },
   // Foreground marks
   markTrue: { fontSize: 22, color: '#22c55e' }, // text-green-500
