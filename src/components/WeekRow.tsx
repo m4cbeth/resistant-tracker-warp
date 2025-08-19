@@ -11,6 +11,8 @@ type Props = {
 };
 
 export function WeekRow({ days, values, onToggle, monthLabel }: Props) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   return (
     <View style={styles.wrapper}>
       {monthLabel ? (
@@ -19,27 +21,51 @@ export function WeekRow({ days, values, onToggle, monthLabel }: Props) {
       <View style={styles.row}>
         {days.map((d, idx) => {
           const key = dateKey(d);
-          const v = values[key];
+          const hasRecord = values[key] === true;
+          const isFuture = d > today;
+
+          // Determine visual state: 'true' | 'false' | 'null'
+          const state: 'true' | 'false' | 'null' = hasRecord ? 'true' : isFuture ? 'null' : 'false';
+
+          // Weekend shading: Sunday (0) and Saturday (6) slightly lighter when state is null
+          const isWeekend = idx === 0 || idx === 6;
+
+          // Borders at month boundaries
           const month = d.getMonth();
-          // Shading: alternate by month
-          const monthShade = month % 2 === 0 ? styles.shadeEven : styles.shadeOdd;
-          // Borders: right border if next day is next month; bottom border if same weekday next week is next month
           const nextDay = idx < 6 ? days[idx + 1] : undefined;
           const crossMonthRight = nextDay && nextDay.getMonth() !== month;
           const belowDay = addDays(d, 7);
           const crossMonthBelow = belowDay.getMonth() !== month;
+
+          const bgStyle =
+            state === 'true'
+              ? styles.bgTrue
+              : state === 'false'
+              ? styles.bgFalse
+              : isWeekend
+              ? styles.bgWeekend
+              : styles.bgWeekday;
+
           return (
             <Pressable
               key={key}
               style={[
                 styles.cell,
-                monthShade,
+                bgStyle,
                 crossMonthRight && styles.borderRight,
                 crossMonthBelow && styles.borderBottom,
               ]}
-              onPress={() => onToggle(d)}
+              disabled={isFuture}
+              onPress={() => !isFuture && onToggle(d)}
             >
-              <Text style={styles.label}>{v ? '✓' : '✗'}</Text>
+              {/* Background date number behind check/X */}
+              <Text style={styles.dateNumber}>{d.getDate()}</Text>
+              {/* Foreground mark based on state */}
+              {state === 'true' ? (
+                <Text style={styles.markTrue}>✓</Text>
+              ) : state === 'false' ? (
+                <Text style={styles.markFalse}>✗</Text>
+              ) : null}
             </Pressable>
           );
         })}
@@ -49,9 +75,18 @@ export function WeekRow({ days, values, onToggle, monthLabel }: Props) {
 }
 
 const styles = StyleSheet.create({
-  wrapper: { flexDirection: 'column' },
-  monthLabel: { color: '#ffffff', marginBottom: 6, fontSize: 12, opacity: 0.9 },
-  row: { flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 6 },
+  wrapper: { flexDirection: 'column', paddingHorizontal: 16 },
+  // Month label: boldest available, slightly larger, aligned with Sunday column left edge
+  monthLabel: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '900',
+    marginTop: 8,
+    marginBottom: 2,
+    marginLeft: 2,
+    opacity: 0.95,
+  },
+  row: { flexDirection: 'row', paddingVertical: 6 },
   cell: {
     flex: 1,
     aspectRatio: 1,
@@ -59,12 +94,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     margin: 2,
     borderRadius: 6,
-    backgroundColor: '#2a2a2a',
+    overflow: 'hidden',
   },
-  shadeEven: { backgroundColor: '#2d2d2d' },
-  shadeOdd: { backgroundColor: '#383838' },
-  borderRight: { borderRightColor: '#ffffff', borderRightWidth: 2 },
-  borderBottom: { borderBottomColor: '#ffffff', borderBottomWidth: 2 },
-  label: { fontSize: 18, color: '#ffffff' },
+  // Base backgrounds
+  bgWeekday: { backgroundColor: '#0b0b0b' },
+  bgWeekend: { backgroundColor: '#161616' },
+  // State-specific backgrounds
+  bgTrue: { backgroundColor: '#052e16' }, // tailwind green-950
+  bgFalse: { backgroundColor: '#000000' },
+  borderRight: { borderRightColor: '#2b2b2b', borderRightWidth: 2 },
+  borderBottom: { borderBottomColor: '#2b2b2b', borderBottomWidth: 2 },
+  // Background date number
+  dateNumber: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -14 }, { translateY: -14 }],
+    fontSize: 28,
+    fontWeight: '900',
+    color: '#9ca3af', // gray-400
+    opacity: 0.18,
+  },
+  // Foreground marks
+  markTrue: { fontSize: 22, color: '#22c55e' }, // text-green-500
+  markFalse: { fontSize: 22, color: '#ef4444' }, // text-red-500
 });
 
