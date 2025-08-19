@@ -59,7 +59,7 @@ export default function EndlessCalendar() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Resistance Tracker TM</Text>
+      <Text style={styles.title}>Resistance Tracker ™</Text>
       <FlatList
         contentContainerStyle={styles.list}
         data={data}
