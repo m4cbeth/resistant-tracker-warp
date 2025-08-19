@@ -11,7 +11,7 @@ export default function Header({ onNavigate }: Props) {
 
   // Typical React Native status bar height approximations vary across platforms.
   // We'll use 24 as a baseline and size the header to 1.5x.
-  const base = 24;
+  const base = 50;
   const headerHeight = Math.round(base * 1.5);
 
   return (
@@ -63,8 +63,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   avatar: {
-    width: 32,
-    height: 32,
+    width: 64,
+    height: 64,
     borderRadius: 16,
     backgroundColor: '#fff',
   },
@@ -72,19 +72,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     right: 0,
-    backgroundColor: '#111',
+    backgroundColor: '#0F0',
+    minWidth: 250,
     borderRadius: 8,
     borderColor: '#333',
     borderWidth: StyleSheet.hairlineWidth,
     overflow: 'hidden',
+    zIndex: 100,
   },
   menuItem: {
     paddingHorizontal: 12,
     paddingVertical: 10,
+    backgroundColor: '#005',
   },
   menuText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 18,
   },
 });
 
