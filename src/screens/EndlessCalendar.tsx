@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react';
-import { FlatList, View, StyleSheet, Text } from 'react-native';
+import { FlatList, View, StyleSheet } from 'react-native';
 import { addWeeks, format } from 'date-fns';
 import { WeekRow } from '../components/WeekRow';
 import { getWeekStart, weekDays, dateKey } from '../utils/dates';
@@ -59,7 +59,6 @@ export default function EndlessCalendar() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Resistance Tracker ™</Text>
       <FlatList
         contentContainerStyle={styles.list}
         data={data}
@@ -76,8 +75,7 @@ export default function EndlessCalendar() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000000', paddingTop: 24 },
-  title: { color: '#ffffff', fontSize: 18, fontWeight: '600', paddingHorizontal: 16, marginBottom: 8 },
+  container: { flex: 1, backgroundColor: '#000000' },
   list: { paddingVertical: 8 },
 });
 
